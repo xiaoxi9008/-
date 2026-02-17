@@ -37,7 +37,7 @@ Window:EditOpenButton(
         Icon = "rbxassetid://123691280552142",
         CornerRadius = UDim.new(0, 13),
         StrokeThickness = 4,
-       Color = "rbxassetid://122305865891820",
+        Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(186, 19, 19)),ColorSequenceKeypoint.new(1, Color3.fromRGB(8, 60, 129))}),
         Draggable = true
     }
 )
@@ -96,7 +96,7 @@ spawn(function()
         fpsCounter += 1
         
         if tick() - fpsLastTime >= 1 then
-            fpsText = string.format("%.1f FPS", fpsCounter) -- 显示一位小数
+            fpsText = string.format("%.1f FPS", fpsCounter) 
             fpsCounter = 0
             fpsLastTime = tick()
         end
