@@ -37,7 +37,7 @@ Window:EditOpenButton(
         Icon = "rbxassetid://123691280552142",
         CornerRadius = UDim.new(0, 13),
         StrokeThickness = 4,
-       Background = "rbxassetid://122305865891820",
+       Color = "rbxassetid://122305865891820",
         Draggable = true
     }
 )
