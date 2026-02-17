@@ -9,7 +9,7 @@ _G.XION_Execution_Count = 1
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 local Window = WindUI:CreateWindow({
     Title = "XIAOXI脚本",
-    Icon = "rbxassetid://18941716391",
+    Icon = "rbxassetid://123691280552142",
     Author = "by小西制作",
     AuthorImage = 90840643379863,
     Folder = "CloudHub",
@@ -32,7 +32,7 @@ local Window = WindUI:CreateWindow({
 Window:EditOpenButton(
     {
         Title = "XIAOXI",
-        Icon = "rbxassetid://18941716391",
+        Icon = "rbxassetid://123691280552142",
         CornerRadius = UDim.new(0, 13),
         StrokeThickness = 4,
         Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(186, 19, 19)),ColorSequenceKeypoint.new(1, Color3.fromRGB(8, 60, 129))}),
