@@ -18,6 +18,7 @@ local Window = WindUI:CreateWindow({
         Key = { "我爱大司马", "小西nb" }, 
         Note = "请输入卡密",
         SaveKey = false,
+        Background = "rbxassetid://122305865891820", 
     },
     Transparent = true,
     Background = "rbxassetid://122305865891820",
