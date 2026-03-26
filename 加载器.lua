@@ -1,6 +1,6 @@
 game:GetService("StarterGui"):SetCore("SendNotification", {
-  Title = "因为你检测到通用",
-  Text = "正在启动XIAOXI通用",
+  Title = "因为你检测到可执行加载器",
+  Text = "正在启动XIAOXI加载器",
   Icon = "rbxassetid://123691280552142",
   Duration = 1,
   Callback = bindable,
@@ -26,12 +26,12 @@ local Window = WindUI:CreateWindow({
     Folder = "CloudHub",
     Size = UDim2.fromOffset(560, 360),
     KeySystem = {
-        Key = { "我爱大司马", "小西nb", "宇星辰", "阵雨眉目" }, 
+        Key = { "小西", "小西nb", "宇星辰", "阵雨眉目" }, 
         Note = "请输入卡密",
         SaveKey = false,
     },
     Transparent = true,
-    Background = "video:https://raw.githubusercontent.com/xiaoxi9008/chesksks/refs/heads/main/b5f9989161bbc2e1f90c4028090de3d8.mp4",
+    Background = "video:https://raw.githubusercontent.com/xiaoxi9008/chesksks/refs/heads/main/Video_1773632365272_24.mp4",
     User = {
             Enabled = true,
             Callback = function()
@@ -47,24 +47,29 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "通用",
+    Title = "加载器",
     Color = Color3.fromHex("FF69B4")
 })
 
-WindUI.Themes.Dark.Button = Color3.fromRGB(255, 255, 255)  
-WindUI.Themes.Dark.ButtonBorder = Color3.fromRGB(255, 255, 255)  
+-- 通过主题设置按钮边框
+WindUI.Themes.Dark.Button = Color3.fromRGB(255, 255, 255)  -- 按钮文字颜色
+WindUI.Themes.Dark.ButtonBorder = Color3.fromRGB(255, 255, 255)  -- 按钮边框颜色
 
+-- 或者直接修改UI样式表
 local function addButtonBorderStyle()
     local mainFrame = Window.UIElements.Main
     if not mainFrame then return end
     
+    -- 创建样式表
     local styleSheet = Instance.new("StyleSheet")
     styleSheet.Parent = mainFrame
     
+    -- 创建样式规则
     local rule = Instance.new("StyleRule")
     rule.Selector = "Button, ImageButton, TextButton"
     rule.Parent = styleSheet
     
+    -- 设置边框样式
     local borderProp = Instance.new("StyleProperty")
     borderProp.Name = "BorderSizePixel"
     borderProp.Value = 1
@@ -76,6 +81,7 @@ local function addButtonBorderStyle()
     colorProp.Parent = rule
 end
 
+-- 主题切换按钮
 Window:CreateTopbarButton("theme-switcher", "moon", function()
     local themes_list = {"Dark", "Light", "Mocha", "Aqua"}
     currentThemeIndex = (currentThemeIndex % #themes_list) + 1
@@ -88,11 +94,13 @@ Window:CreateTopbarButton("theme-switcher", "moon", function()
     })
 end, 990)
 
+-- 修改主题颜色
 WindUI.Themes.Dark.Toggle = Color3.fromHex("FF69B4")
 WindUI.Themes.Dark.Checkbox = Color3.fromHex("FFB6C1")
 WindUI.Themes.Dark.Button = Color3.fromHex("FF1493")
 WindUI.Themes.Dark.Slider = Color3.fromHex("FF69B4")
 
+-- 彩虹边框颜色方案
 local COLOR_SCHEMES = {
     ["彩虹颜色"] = {ColorSequence.new({
         ColorSequenceKeypoint.new(0, Color3.fromHex("FF0000")),
@@ -131,6 +139,7 @@ Window:EditOpenButton(
     }
 )
 
+-- 创建彩虹边框函数
 local function createRainbowBorder(window, colorScheme, speed)
     local mainFrame = window.UIElements.Main
     if not mainFrame then return nil end
@@ -170,6 +179,7 @@ local function createRainbowBorder(window, colorScheme, speed)
     return rainbowStroke
 end
 
+-- 边框动画函数
 local function startBorderAnimation(window, speed)
     local mainFrame = window.UIElements.Main
     if not mainFrame then return nil end
@@ -193,6 +203,7 @@ local function startBorderAnimation(window, speed)
     return animation
 end
 
+-- 初始化边框动画
 local borderAnimation
 local borderEnabled = true
 local currentColor = "樱花粉2"
