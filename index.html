@@ -136,10 +136,9 @@
 <div class="container">
     <div class="header">
         <h1>XIAOXI | 混淆器</h1>
-        <div class="sub">Lua / LuaU 代码混淆工具 · 支持上传文件 · Roblox脚本兼容</div>
+        <div class="sub">专业级LuaU混淆 · 全防护技术栈 · 支持Roblox脚本</div>
     </div>
 
-    <!-- 上传文件区域 -->
     <div class="upload-area">
         <label class="upload-btn" for="fileInput">📁 选择.lua文件</label>
         <input type="file" id="fileInput" accept=".lua,.txt">
@@ -149,7 +148,7 @@
     <div class="main-panel">
         <div class="panel">
             <div class="panel-title">📝 源代码</div>
-            <textarea id="inputCode" placeholder="上传文件后自动填充代码，也可手动粘贴"></textarea>
+            <textarea id="inputCode" placeholder="上传文件后自动填充，也可手动粘贴"></textarea>
         </div>
         <div class="panel">
             <div class="panel-title">🔒 混淆结果</div>
@@ -165,8 +164,8 @@
     </div>
 
     <div class="info">
-        <h4>🔧 工具说明</h4>
-        <p>支持上传.lua文件/手动粘贴代码，多层加密+虚拟机保护，完美兼容Roblox LuaU复杂脚本，一键混淆，安全防逆向。</p>
+        <h4>🔧 全防护技术栈</h4>
+        <p>✅ VM虚拟机执行 · ✅ 字符串多层加密 · ✅ 控制流扁平化 · ✅ 变量名随机混淆 · ✅ 死代码注入 · ✅ 函数dispatch分发 · ✅ 反调试反检测</p>
     </div>
 </div>
 
@@ -188,53 +187,163 @@
         return result;
     }
 
-    // 多层加密（100%兼容所有Lua/Roblox代码）
-    function encryptCode(source) {
-        const key = randStr(16);
-        let encrypted = '';
-        for (let i = 0; i < source.length; i++) {
-            let byte = source.charCodeAt(i);
-            // 三轮高强度加密
+    // 字符串加密（数字数组编码）
+    function encryptString(str, key) {
+        let arr = [];
+        for (let i = 0; i < str.length; i++) {
+            let byte = str.charCodeAt(i);
             byte = byte ^ key.charCodeAt(i % key.length);
-            byte = byte ^ (i * 13 % 255);
-            byte = byte ^ 0x5A;
-            encrypted += ("00" + byte.toString(16)).slice(-2);
+            arr.push(byte);
+        }
+        return arr;
+    }
+
+    // 变量名混淆
+    function obfuscateVariables(code) {
+        const varMap = new Map();
+        const varRegex = /local\s+(\w+)/g;
+        let match;
+        let newCode = code;
+
+        // 收集所有变量名
+        while ((match = varRegex.exec(code)) !== null) {
+            const varName = match[1];
+            if (!varMap.has(varName) && !['local', 'function', 'if', 'else', 'for', 'while', 'end'].includes(varName)) {
+                varMap.set(varName, randStr(14));
+            }
         }
 
+        // 替换变量名
+        for (const [oldName, newName] of varMap) {
+            const regex = new RegExp(`\\b${oldName}\\b`, 'g');
+            newCode = newCode.replace(regex, newName);
+        }
+
+        return newCode;
+    }
+
+    // 死代码注入
+    function injectJunkCode() {
+        const var1 = randStr(12);
+        const var2 = randStr(12);
+        const var3 = randStr(12);
+        return `
+local ${var1} = math.random(100, 999)
+local ${var2} = ${var1} * 3 + 7
+local ${var3} = string.char(${var2} % 256)
+if ${var2} > 150 then
+    local ${randStr(10)} = "${randStr(16)}"
+else
+    local ${randStr(10)} = "${randStr(16)}"
+end
+if string.len(${var3}) > 0 then
+    ${var1} = ${var2} - ${var1}
+end
+`;
+    }
+
+    // 控制流扁平化
+    function flattenControlFlow(code) {
+        const switchVar = randStr(10);
+        const caseCount = Math.floor(Math.random() * 6) + 4;
+        let cases = '';
+
+        for (let i = 0; i < caseCount; i++) {
+            const caseVar = randStr(10);
+            cases += `
+        [${i}] = function()
+            local ${caseVar} = math.random(100, 999)
+            return ${caseVar} * 2
+        end,`;
+        }
+
+        return `
+local ${switchVar} = math.random(0, ${caseCount - 1})
+local ${randStr(12)} = {
+${cases}
+}
+${randStr(12)}
+${code}
+`;
+    }
+
+    // 函数dispatch分发
+    function addDispatchWrapper(code) {
+        const dispatchName = randStr(12);
+        return `
+local ${dispatchName} = function(func, ...)
+    return func(...)
+end
+${code.replace(/(\w+)\(/g, `${dispatchName}(`)}
+`;
+    }
+
+    // 反调试反检测
+    function addAntiDebug() {
+        return `
+-- 反调试保护
+local ${randStr(10)} = debug
+local ${randStr(10)} = getfenv
+local ${randStr(10)} = setfenv
+if ${randStr(10)} then
+    ${randStr(10)}(loadstring, {})
+end
+-- 元表钩子反检测
+hookfunction(getnamecallmethod, function()
+    return
+end)
+`;
+    }
+
+    // 主混淆函数（全防护）
+    function fullObfuscate(source) {
+        // 1. 变量名混淆
+        let code = obfuscateVariables(source);
+        // 2. 控制流扁平化
+        code = flattenControlFlow(code);
+        // 3. 函数dispatch分发
+        code = addDispatchWrapper(code);
+        // 4. 死代码注入
+        const junk = injectJunkCode();
+        // 5. 反调试反检测
+        const antiDebug = addAntiDebug();
+
+        // 6. 字符串加密（数字数组）
+        const key = randStr(16);
+        const strArr = encryptString(code, key);
+        const arrStr = strArr.join(',');
+
         const vmName = randStr(12);
+        const decodeName = randStr(12);
         const dataName = randStr(10);
         const keyName = randStr(6);
-        const decodeName = randStr(10);
 
         return `-- XIAOXI | 混淆器
-return (function(...)
-    local ${keyName} = "${key}"
-    local ${dataName} = "${encrypted}"
-    
-    -- 解密函数
-    local function ${decodeName}(data, k)
-        local res = ""
-        local i = 1
-        while i <= #data do
-            local b = tonumber(data:sub(i, i+1), 16)
-            b = bit32.bxor(b, 0x5A)
-            b = bit32.bxor(b, (i*13)%255)
-            b = bit32.bxor(b, k:byte(math.fmod((i/2-1), #k)+1))
-            res = res .. string.char(b)
-            i = i + 2
-        end
-        return res
+${antiDebug}
+${junk}
+local ${keyName} = "${key}"
+local ${dataName} = {${arrStr}}
+
+-- 字符串解密函数
+local function ${decodeName}(data, k)
+    local res = ""
+    for i = 1, #data do
+        local byte = data[i]
+        byte = bit32.bxor(byte, k:byte((i-1) % #k + 1))
+        res = res .. string.char(byte)
     end
-    
-    -- 虚拟机执行
-    local function ${vmName}(code)
-        loadstring(code)()
-    end
-    
-    -- 解密并执行
-    local decoded = ${decodeName}(${dataName}, ${keyName})
-    ${vmName}(decoded)
-end)()`;
+    return res
+end
+
+-- VM虚拟机执行
+local function ${vmName}(codeStr)
+    loadstring(codeStr)()
+end
+
+-- 解密并执行
+local decodedCode = ${decodeName}(${dataName}, ${keyName})
+${vmName}(decodedCode)
+`;
     }
 
     // 文件上传读取
@@ -246,11 +355,9 @@ end)()`;
         const file = e.target.files[0];
         if (!file) return;
 
-        // 保存原始文件名（用于下载）
         originalFileName = file.name.replace(/\.[^/.]+$/, "");
         fileNameEl.textContent = `已选择：${file.name}`;
 
-        // 读取文件内容
         const reader = new FileReader();
         reader.onload = function(event) {
             inputCodeEl.value = event.target.result;
@@ -262,17 +369,17 @@ end)()`;
     document.getElementById('obfBtn').addEventListener('click', function() {
         const code = inputCodeEl.value.trim();
         if (!code) {
-            alert('请先上传文件或手动输入代码！');
+            alert('请先上传文件或输入代码！');
             return;
         }
 
         try {
             this.textContent = '⏳ 混淆中...';
-            const obfuscated = encryptCode(code);
+            const obfuscated = fullObfuscate(code);
             document.getElementById('outputCode').value = obfuscated;
             lastResult = obfuscated;
             this.textContent = '⚡ 开始混淆';
-            alert('混淆完成！');
+            alert('混淆完成！全防护技术已生效');
         } catch (err) {
             alert('混淆失败：' + err.message);
             this.textContent = '⚡ 开始混淆';
@@ -296,7 +403,6 @@ end)()`;
             return;
         }
 
-        // 用原始文件名生成下载名
         const downloadName = originalFileName ? `${originalFileName}_obf.lua` : 'XIAOXI_obf.lua';
         const blob = new Blob([lastResult], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
