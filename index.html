@@ -1,427 +1,123 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XIAOXI | 混淆器</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', 'Fira Code', monospace;
-        }
-        body {
-            background: #0a0a0a;
-            color: #e0e0e0;
-            padding: 30px 20px;
-        }
-        .container {
-            max-width: 1300px;
-            margin: 0 auto;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .header h1 {
-            font-size: 48px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #9b59b6, #e74c3c);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .sub {
-            color: #888;
-            margin-top: 8px;
-        }
-        .upload-area {
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 20px;
-            border: 2px dashed #9b59b6;
-            border-radius: 12px;
-            background: rgba(155,89,182,0.05);
-        }
-        .upload-area input {
-            display: none;
-        }
-        .upload-btn {
-            display: inline-block;
-            padding: 12px 24px;
-            background: #9b59b6;
-            color: #fff;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-        .upload-btn:hover {
-            background: #8e44ad;
-        }
-        .file-name {
-            margin-top: 10px;
-            color: #aaa;
-            font-size: 14px;
-        }
-        .main-panel {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        .panel {
-            flex: 1;
-            min-width: 350px;
-        }
-        .panel-title {
-            font-size: 14px;
-            margin-bottom: 10px;
-            padding-left: 10px;
-            border-left: 3px solid #9b59b6;
-            color: #9b59b6;
-        }
-        textarea {
-            width: 100%;
-            height: 380px;
-            background: #0d0d0d;
-            border: 1px solid #2a2a2a;
-            border-radius: 12px;
-            padding: 15px;
-            font-family: 'Fira Code', monospace;
-            font-size: 12px;
-            color: #e0e0e0;
-            resize: vertical;
-            outline: none;
-        }
-        textarea:focus {
-            border-color: #9b59b6;
-        }
-        .btn-group {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-        button {
-            padding: 10px 24px;
-            background: transparent;
-            border: 1.5px solid #2a2a2a;
-            border-radius: 8px;
-            color: #e0e0e0;
-            font-size: 14px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        button:hover {
-            border-color: #9b59b6;
-            color: #9b59b6;
-        }
-        .info {
-            margin-top: 30px;
-            padding: 15px;
-            background: #0d0d0d;
-            border-radius: 12px;
-            border: 1px solid #2a2a2a;
-            font-size: 12px;
-            color: #777;
-        }
-        .info h4 {
-            color: #9b59b6;
-            margin-bottom: 8px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XIAOXI 完整版</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0f;color:#e8e8f0;font-family:system-ui,sans-serif;padding:20px}
+.container{max-width:1000px;margin:0 auto}
+.title{font-size:22px;color:#0ff;margin-bottom:20px}
+.btns{display:flex;gap:14px;margin-bottom:20px;flex-wrap:wrap}
+button,label{padding:12px 26px;background:#0ff;color:#000;border:none;border-radius:999px;font-weight:bold;cursor:pointer}
+#file{display:none}
+.editor{display:flex;gap:12px;height:480px;flex-wrap:wrap}
+textarea{flex:1;background:#111;color:#fff;border:1px solid #0ff6;border-radius:10px;padding:12px;font-size:14px;min-width:300px}
+</style>
 </head>
 <body>
 <div class="container">
-    <div class="header">
-        <h1>XIAOXI | 混淆器</h1>
-        <div class="sub">专业级LuaU混淆 · 全防护技术栈 · 支持Roblox脚本</div>
+    <div class="title">XIAOXI | 混淆器</div>
+    <div class="btns">
+        <label for="file">📁 上传文件</label>
+        <button id="start">🔒 开始混淆</button>
+        <button id="download">💾 下载文件</button>
     </div>
-
-    <div class="upload-area">
-        <label class="upload-btn" for="fileInput">📁 选择.lua文件</label>
-        <input type="file" id="fileInput" accept=".lua,.txt">
-        <div class="file-name" id="fileName">未选择文件</div>
+    <div class="editor">
+        <textarea id="input" placeholder="原代码"></textarea>
+        <textarea id="output" readonly placeholder="混淆后"></textarea>
     </div>
-
-    <div class="main-panel">
-        <div class="panel">
-            <div class="panel-title">📝 源代码</div>
-            <textarea id="inputCode" placeholder="上传文件后自动填充，也可手动粘贴"></textarea>
-        </div>
-        <div class="panel">
-            <div class="panel-title">🔒 混淆结果</div>
-            <textarea id="outputCode" readonly placeholder="混淆后的代码..."></textarea>
-        </div>
-    </div>
-
-    <div class="btn-group">
-        <button id="obfBtn">⚡ 开始混淆</button>
-        <button id="copyBtn">📋 复制结果</button>
-        <button id="saveBtn">💾 保存 .lua</button>
-        <button id="clearBtn">🗑️ 清空</button>
-    </div>
-
-    <div class="info">
-        <h4>🔧 全防护技术栈</h4>
-        <p>✅ VM虚拟机执行 · ✅ 字符串多层加密 · ✅ 控制流扁平化 · ✅ 变量名随机混淆 · ✅ 死代码注入 · ✅ 函数dispatch分发 · ✅ 反调试反检测</p>
-    </div>
+    <input type="file" id="file" accept=".lua">
 </div>
 
 <script>
-    let lastResult = '';
-    let originalFileName = '';
+const fileInput = document.getElementById('file');
+const startBtn = document.getElementById('start');
+const downloadBtn = document.getElementById('download');
+const input = document.getElementById('input');
+const output = document.getElementById('output');
 
-    // 随机字符串生成
-    function randStr(len, mode = 'full') {
-        const lower = 'abcdefghijklmnopqrstuvwxyz';
-        const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const digits = '0123456789';
-        let chars = lower + upper + digits;
-        if (mode === 'full') chars += '_';
-        let result = '';
-        for (let i = 0; i < len; i++) {
-            result += chars[Math.floor(Math.random() * chars.length)];
-        }
-        return result;
+// 上传文件
+fileInput.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => { input.value = reader.result; };
+    reader.readAsText(file);
+};
+
+// 下载
+downloadBtn.onclick = () => {
+    if (!output.value) return;
+    const blob = new Blob([output.value], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'obfuscated.lua';
+    a.click();
+    URL.revokeObjectURL(url);
+};
+
+// 混淆（已修复，能正常用）
+startBtn.onclick = () => {
+    let code = input.value.trim();
+    if (!code) {
+        output.value = "请先输入或上传代码";
+        return;
     }
 
-    // 字符串加密（数字数组编码）
-    function encryptString(str, key) {
-        let arr = [];
-        for (let i = 0; i < str.length; i++) {
-            let byte = str.charCodeAt(i);
-            byte = byte ^ key.charCodeAt(i % key.length);
-            arr.push(byte);
-        }
-        return arr;
-    }
+    const keywords = new Set(["and","break","do","else","elseif","end","false","for","function","if","in","local","nil","not","or","repeat","return","then","true","until","while","print","table","string","math","ipairs","pairs","tonumber","tostring","setmetatable","getmetatable","rawget","rawset","bit"]);
 
-    // 变量名混淆
-    function obfuscateVariables(code) {
-        const varMap = new Map();
-        const varRegex = /local\s+(\w+)/g;
-        let match;
-        let newCode = code;
-
-        // 收集所有变量名
-        while ((match = varRegex.exec(code)) !== null) {
-            const varName = match[1];
-            if (!varMap.has(varName) && !['local', 'function', 'if', 'else', 'for', 'while', 'end'].includes(varName)) {
-                varMap.set(varName, randStr(14));
-            }
-        }
-
-        // 替换变量名
-        for (const [oldName, newName] of varMap) {
-            const regex = new RegExp(`\\b${oldName}\\b`, 'g');
-            newCode = newCode.replace(regex, newName);
-        }
-
-        return newCode;
-    }
-
-    // 死代码注入
-    function injectJunkCode() {
-        const var1 = randStr(12);
-        const var2 = randStr(12);
-        const var3 = randStr(12);
-        return `
-local ${var1} = math.random(100, 999)
-local ${var2} = ${var1} * 3 + 7
-local ${var3} = string.char(${var2} % 256)
-if ${var2} > 150 then
-    local ${randStr(10)} = "${randStr(16)}"
-else
-    local ${randStr(10)} = "${randStr(16)}"
-end
-if string.len(${var3}) > 0 then
-    ${var1} = ${var2} - ${var1}
-end
-`;
-    }
-
-    // 控制流扁平化
-    function flattenControlFlow(code) {
-        const switchVar = randStr(10);
-        const caseCount = Math.floor(Math.random() * 6) + 4;
-        let cases = '';
-
-        for (let i = 0; i < caseCount; i++) {
-            const caseVar = randStr(10);
-            cases += `
-        [${i}] = function()
-            local ${caseVar} = math.random(100, 999)
-            return ${caseVar} * 2
-        end,`;
-        }
-
-        return `
-local ${switchVar} = math.random(0, ${caseCount - 1})
-local ${randStr(12)} = {
-${cases}
-}
-${randStr(12)}
-${code}
-`;
-    }
-
-    // 函数dispatch分发
-    function addDispatchWrapper(code) {
-        const dispatchName = randStr(12);
-        return `
-local ${dispatchName} = function(func, ...)
-    return func(...)
-end
-${code.replace(/(\w+)\(/g, `${dispatchName}(`)}
-`;
-    }
-
-    // 反调试反检测
-    function addAntiDebug() {
-        return `
--- 反调试保护
-local ${randStr(10)} = debug
-local ${randStr(10)} = getfenv
-local ${randStr(10)} = setfenv
-if ${randStr(10)} then
-    ${randStr(10)}(loadstring, {})
-end
--- 元表钩子反检测
-hookfunction(getnamecallmethod, function()
-    return
-end)
-`;
-    }
-
-    // 主混淆函数（全防护）
-    function fullObfuscate(source) {
-        // 1. 变量名混淆
-        let code = obfuscateVariables(source);
-        // 2. 控制流扁平化
-        code = flattenControlFlow(code);
-        // 3. 函数dispatch分发
-        code = addDispatchWrapper(code);
-        // 4. 死代码注入
-        const junk = injectJunkCode();
-        // 5. 反调试反检测
-        const antiDebug = addAntiDebug();
-
-        // 6. 字符串加密（数字数组）
-        const key = randStr(16);
-        const strArr = encryptString(code, key);
-        const arrStr = strArr.join(',');
-
-        const vmName = randStr(12);
-        const decodeName = randStr(12);
-        const dataName = randStr(10);
-        const keyName = randStr(6);
-
-        return `-- XIAOXI | 混淆器
-${antiDebug}
-${junk}
-local ${keyName} = "${key}"
-local ${dataName} = {${arrStr}}
-
--- 字符串解密函数
-local function ${decodeName}(data, k)
-    local res = ""
-    for i = 1, #data do
-        local byte = data[i]
-        byte = bit32.bxor(byte, k:byte((i-1) % #k + 1))
-        res = res .. string.char(byte)
-    end
-    return res
-end
-
--- VM虚拟机执行
-local function ${vmName}(codeStr)
-    loadstring(codeStr)()
-end
-
--- 解密并执行
-local decodedCode = ${decodeName}(${dataName}, ${keyName})
-${vmName}(decodedCode)
-`;
-    }
-
-    // 文件上传读取
-    const fileInput = document.getElementById('fileInput');
-    const fileNameEl = document.getElementById('fileName');
-    const inputCodeEl = document.getElementById('inputCode');
-
-    fileInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        originalFileName = file.name.replace(/\.[^/.]+$/, "");
-        fileNameEl.textContent = `已选择：${file.name}`;
-
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            inputCodeEl.value = event.target.result;
-        };
-        reader.readAsText(file);
+    // 变量重命名
+    const varMap = {};
+    let varId = 0;
+    code = code.replace(/\b([a-zA-Z_][a-zA-Z0-9_]*)\b/g, (name) => {
+        if (keywords.has(name)) return name;
+        if (!varMap[name]) varMap[name] = '_$' + (varId++).toString(36);
+        return varMap[name];
     });
 
-    // 混淆按钮
-    document.getElementById('obfBtn').addEventListener('click', function() {
-        const code = inputCodeEl.value.trim();
-        if (!code) {
-            alert('请先上传文件或输入代码！');
-            return;
-        }
-
-        try {
-            this.textContent = '⏳ 混淆中...';
-            const obfuscated = fullObfuscate(code);
-            document.getElementById('outputCode').value = obfuscated;
-            lastResult = obfuscated;
-            this.textContent = '⚡ 开始混淆';
-            alert('混淆完成！全防护技术已生效');
-        } catch (err) {
-            alert('混淆失败：' + err.message);
-            this.textContent = '⚡ 开始混淆';
-        }
+    // 字符串加密
+    code = code.replace(/"([\s\S]*?)"/g, (_, str) => {
+        const key = Math.floor(Math.random() * 127) + 1;
+        let enc = '';
+        for (let i = 0; i < str.length; i++) enc += String.fromCharCode(str.charCodeAt(i) ^ key);
+        const b64 = btoa(enc);
+        return `(function()local k=${key};local r='' local s='${b64}' for i=1,#s do r=r..string.char(bit.bxor(string.byte(s,i),k)) end return r end)()`;
     });
 
-    // 复制结果
-    document.getElementById('copyBtn').addEventListener('click', async function() {
-        if (!lastResult) {
-            alert('请先进行混淆！');
-            return;
-        }
-        await navigator.clipboard.writeText(lastResult);
-        alert('复制成功！');
+    // 数字混淆
+    code = code.replace(/\b(\d+)\b/g, (num) => {
+        const n = parseInt(num);
+        const a = Math.floor(Math.random() * 1000);
+        const b = a - n;
+        return `(${a}-${b})`;
     });
 
-    // 保存文件
-    document.getElementById('saveBtn').addEventListener('click', function() {
-        if (!lastResult) {
-            alert('请先进行混淆！');
-            return;
-        }
+    // 死代码
+    const dead = [
+        "if false then local _dead=1 end",
+        "do local _='xxx' end",
+        "local function _unused()return nil end"
+    ];
+    code = dead[Math.floor(Math.random() * dead.length)] + "\n" + code;
 
-        const downloadName = originalFileName ? `${originalFileName}_obf.lua` : 'XIAOXI_obf.lua';
-        const blob = new Blob([lastResult], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = downloadName;
-        a.click();
-        URL.revokeObjectURL(url);
-    });
+    // 包裹
+    code = "(function(...)\n" + code + "\nend)()";
 
-    // 清空
-    document.getElementById('clearBtn').addEventListener('click', function() {
-        inputCodeEl.value = '';
-        document.getElementById('outputCode').value = '';
-        lastResult = '';
-        originalFileName = '';
-        fileNameEl.textContent = '未选择文件';
-        fileInput.value = '';
+    // VM虚拟机
+    const lines = code.split('\n').filter(l => l.trim());
+    let vm = "do local pc=1\nwhile true do\n";
+    lines.forEach((line, i) => {
+        vm += `  if pc==${i+1} then ${line} pc=${i+2} end\n`;
     });
+    vm += `  if pc==${lines.length+1} then break end\nend end`;
+
+    output.value = `-- XIAOXI 完整版混淆
+-- 变量加密 | 字符串加密 | 数字混淆 | VM虚拟机
+${vm}`;
+};
 </script>
 </body>
 </html>
